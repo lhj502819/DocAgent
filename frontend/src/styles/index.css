@@ -1,0 +1,64 @@
+/* 全局样式 - 水墨风格 */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* 水墨风格色彩 */
+  --color-ink-black: #1a1a1a;
+  --color-ink-light: #666666;
+  --color-paper-white: #f9f7f4;
+  --color-bamboo-green: #5a8c7e;
+  --color-cinnabar: #c8553d;
+  --color-smoke-gray: #d9d9d9;
+  --color-mist: #e8e8e8;
+
+  font-family: 'Noto Serif', 'Source Han Serif', Georgia, serif;
+  line-height: 1.6;
+  font-weight: 400;
+
+  color: var(--color-ink-black);
+  background-color: var(--color-paper-white);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* 代码字体 */
+code,
+pre {
+  font-family: 'Fira Code', 'Consolas', monospace;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-mist);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-smoke-gray);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-light);
+}

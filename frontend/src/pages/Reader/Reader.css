@@ -1,0 +1,107 @@
+.reader-layout {
+  min-height: 100vh;
+  background: var(--color-paper-white);
+}
+
+.reader-header {
+  background: white;
+  border-bottom: 1px solid var(--color-smoke-gray);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.document-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-ink-black);
+}
+
+.header-right {
+  display: flex;
+  gap: 8px;
+}
+
+.reader-content {
+  padding: 0;
+  height: calc(100vh - 64px);
+  overflow: hidden;
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.reader-container {
+  display: flex;
+  height: 100%;
+}
+
+.pdf-viewer-section {
+  flex: 1;
+  border-right: 1px solid var(--color-smoke-gray);
+  overflow: hidden;
+  background: white;
+}
+
+.pdf-viewer {
+  padding: 24px;
+}
+
+.translation-section {
+  flex: 1;
+  border-right: 1px solid var(--color-smoke-gray);
+  overflow: auto;
+  background: white;
+}
+
+.translation-viewer {
+  padding: 24px;
+}
+
+.chat-section {
+  width: 400px;
+  background: var(--color-mist);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--color-smoke-gray);
+}
+
+/* Mock PDF占位符 */
+.mock-pdf-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: var(--color-paper-white);
+}
+
+.mock-content {
+  text-align: center;
+  padding: 40px;
+}
+
+.mock-content h3 {
+  margin: 16px 0 8px;
+  color: var(--color-ink-black);
+}
+
+.mock-content p {
+  color: var(--color-smoke-gray);
+  margin: 4px 0;
+}

@@ -1,0 +1,108 @@
+.translation-view-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-paper-white);
+}
+
+.translation-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: white;
+  border-bottom: 1px solid var(--color-smoke-gray);
+}
+
+.translation-content {
+  flex: 1;
+  overflow: auto;
+  padding: 20px;
+}
+
+.translation-loading,
+.translation-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 300px;
+}
+
+/* 段落容器 */
+.paragraphs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.paragraph-item {
+  padding: 16px;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid var(--color-smoke-gray);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.paragraph-item:hover {
+  border-color: var(--color-bamboo-green);
+  box-shadow: 0 2px 8px rgba(90, 140, 126, 0.15);
+}
+
+.paragraph-item.selected {
+  border-color: var(--color-bamboo-green);
+  background: rgba(90, 140, 126, 0.05);
+  box-shadow: 0 4px 12px rgba(90, 140, 126, 0.2);
+}
+
+.paragraph-index {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-bamboo-green);
+  margin-bottom: 8px;
+}
+
+.paragraph-original {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--color-ink-black);
+  margin-bottom: 12px;
+  opacity: 0.7;
+}
+
+.paragraph-divider {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-smoke-gray),
+    transparent
+  );
+  margin: 12px 0;
+}
+
+.paragraph-translated {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--color-ink-black);
+  font-weight: 500;
+}
+
+/* 滚动条样式 */
+.translation-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.translation-content::-webkit-scrollbar-thumb {
+  background: var(--color-smoke-gray);
+  border-radius: 4px;
+}
+
+.translation-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-bamboo-green);
+}
+
+.translation-content::-webkit-scrollbar-track {
+  background: transparent;
+}

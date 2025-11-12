@@ -1,0 +1,77 @@
+.pdf-viewer-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-paper-white);
+}
+
+.pdf-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: white;
+  border-bottom: 1px solid var(--color-smoke-gray);
+}
+
+.page-info {
+  padding: 0 12px;
+  color: var(--color-ink-black);
+  font-size: 14px;
+}
+
+.pdf-content {
+  flex: 1;
+  overflow: auto;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.pdf-content .react-pdf__Document {
+  display: flex;
+  justify-content: center;
+}
+
+.pdf-content .react-pdf__Page {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.pdf-content .react-pdf__Page__canvas {
+  max-width: 100%;
+  height: auto !important;
+}
+
+.pdf-content .react-pdf__Page__textContent {
+  user-select: text;
+}
+
+.pdf-viewer-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-smoke-gray);
+  font-size: 16px;
+}
+
+/* 滚动条样式 */
+.pdf-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.pdf-content::-webkit-scrollbar-thumb {
+  background: var(--color-smoke-gray);
+  border-radius: 4px;
+}
+
+.pdf-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-bamboo-green);
+}
+
+.pdf-content::-webkit-scrollbar-track {
+  background: transparent;
+}
