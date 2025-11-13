@@ -43,6 +43,17 @@ export interface TranslationParagraph {
 }
 
 /**
+ * 翻译句子片段（用于联动高亮）
+ */
+export interface TranslationSentence {
+  id: number; // 句子ID，用于关联原文和译文
+  originalText: string; // 原文句子
+  translatedText: string; // 译文句子
+  startIndex: number; // 原文起始索引
+  endIndex: number; // 原文结束索引
+}
+
+/**
  * 对话历史实体
  */
 export interface ChatHistory {

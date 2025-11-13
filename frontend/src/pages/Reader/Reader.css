@@ -105,3 +105,118 @@
   color: var(--color-smoke-gray);
   margin: 4px 0;
 }
+
+/* Mock PDF内容显示 */
+.mock-pdf-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
+.mock-pdf-header {
+  padding: 20px 24px;
+  border-bottom: 2px solid var(--color-bamboo-green);
+  background: rgba(90, 140, 126, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.mock-pdf-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-ink-black);
+}
+
+.mock-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-bamboo-green);
+  font-weight: 500;
+}
+
+.mock-pdf-text {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  background: #fafafa;
+}
+
+.original-sentences-container {
+  line-height: 2;
+  font-size: 15px;
+  color: var(--color-ink-black);
+  text-align: justify;
+  user-select: text;
+}
+
+.original-sentence {
+  display: inline;
+  padding: 2px 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 3px;
+}
+
+.original-sentence:hover {
+  background: rgba(90, 140, 126, 0.15);
+  box-shadow: 0 1px 3px rgba(90, 140, 126, 0.2);
+}
+
+.original-sentence.highlighted {
+  background: rgba(90, 140, 126, 0.3);
+  box-shadow: 0 2px 6px rgba(90, 140, 126, 0.3);
+  font-weight: 500;
+}
+
+.original-paragraph {
+  margin: 0 0 20px 0;
+  padding: 16px;
+  line-height: 2;
+  font-size: 15px;
+  color: var(--color-ink-black);
+  background: white;
+  border-radius: 4px;
+  border-left: 3px solid var(--color-bamboo-green);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  text-align: justify;
+}
+
+.original-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.no-content-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-smoke-gray);
+  text-align: center;
+}
+
+.no-content-placeholder p {
+  margin: 8px 0;
+}
+
+/* 滚动条样式 */
+.mock-pdf-text::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mock-pdf-text::-webkit-scrollbar-thumb {
+  background: var(--color-smoke-gray);
+  border-radius: 4px;
+}
+
+.mock-pdf-text::-webkit-scrollbar-thumb:hover {
+  background: var(--color-bamboo-green);
+}
+
+.mock-pdf-text::-webkit-scrollbar-track {
+  background: transparent;
+}

@@ -58,7 +58,7 @@ function Home() {
 
       return true
     },
-    customRequest: async ({ file, onSuccess, onError, onProgress }) => {
+    customRequest: async ({ file, onSuccess, onError }) => {
       try {
         setUploading(true)
         message.loading({ content: '正在上传文档...', key: 'upload', duration: 0 })

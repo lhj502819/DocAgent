@@ -16,8 +16,8 @@
 
 .translation-content {
   flex: 1;
-  overflow: auto;
-  padding: 20px;
+  overflow: hidden;
+  display: flex;
 }
 
 .translation-loading,
@@ -27,82 +27,68 @@
   justify-content: center;
   height: 100%;
   min-height: 300px;
+  width: 100%;
 }
 
-/* 段落容器 */
-.paragraphs-container {
+/* 单栏译文显示布局 */
+.single-column-view {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 24px;
 }
 
-.paragraph-item {
-  padding: 16px;
+.translation-text-panel {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  overflow-x: hidden;
   background: white;
-  border-radius: 4px;
-  border: 1px solid var(--color-smoke-gray);
-  cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.paragraph-item:hover {
-  border-color: var(--color-bamboo-green);
-  box-shadow: 0 2px 8px rgba(90, 140, 126, 0.15);
-}
-
-.paragraph-item.selected {
-  border-color: var(--color-bamboo-green);
-  background: rgba(90, 140, 126, 0.05);
-  box-shadow: 0 4px 12px rgba(90, 140, 126, 0.2);
-}
-
-.paragraph-index {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--color-bamboo-green);
-  margin-bottom: 8px;
-}
-
-.paragraph-original {
-  font-size: 14px;
-  line-height: 1.8;
-  color: var(--color-ink-black);
-  margin-bottom: 12px;
-  opacity: 0.7;
-}
-
-.paragraph-divider {
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    var(--color-smoke-gray),
-    transparent
-  );
-  margin: 12px 0;
-}
-
-.paragraph-translated {
+/* 译文内容 */
+.translation-text-content {
+  line-height: 2;
   font-size: 15px;
-  line-height: 1.8;
   color: var(--color-ink-black);
+  text-align: justify;
+  user-select: text;
+}
+
+/* 译文句子样式 */
+.translation-sentence {
+  display: inline;
+  padding: 2px 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 3px;
+}
+
+.translation-sentence:hover {
+  background: rgba(90, 140, 126, 0.15);
+  box-shadow: 0 1px 3px rgba(90, 140, 126, 0.2);
+}
+
+.translation-sentence.highlighted {
+  background: rgba(90, 140, 126, 0.3);
+  box-shadow: 0 2px 6px rgba(90, 140, 126, 0.3);
   font-weight: 500;
 }
 
 /* 滚动条样式 */
-.translation-content::-webkit-scrollbar {
+.translation-text-panel::-webkit-scrollbar {
   width: 8px;
 }
 
-.translation-content::-webkit-scrollbar-thumb {
+.translation-text-panel::-webkit-scrollbar-thumb {
   background: var(--color-smoke-gray);
   border-radius: 4px;
 }
 
-.translation-content::-webkit-scrollbar-thumb:hover {
+.translation-text-panel::-webkit-scrollbar-thumb:hover {
   background: var(--color-bamboo-green);
 }
 
-.translation-content::-webkit-scrollbar-track {
+.translation-text-panel::-webkit-scrollbar-track {
   background: transparent;
 }

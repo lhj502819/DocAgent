@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button, Select, Spin, Empty, message } from 'antd';
 import { TranslationOutlined, ReloadOutlined } from '@ant-design/icons';
 import {
   translateApiWithMock as translateApi,
   Translation,
   TranslationParagraph,
+  TranslationSentence,
 } from '../api/mockApi';
 import './TranslationView.css';
 
@@ -19,21 +20,102 @@ interface TranslationViewProps {
    * 选中段落回调
    */
   onParagraphSelect?: (paragraph: TranslationParagraph) => void;
+  /**
+   * 当前高亮的句子ID（外部控制）
+   */
+  highlightedSentenceId?: number | null;
+  /**
+   * 句子hover回调
+   */
+  onSentenceHover?: (sentenceId: number | null) => void;
+  /**
+   * 文本选择回调
+   */
+  onTextSelect?: (text: string) => void;
 }
 
 /**
  * 翻译查看器组件
  */
-function TranslationView({ documentId, onParagraphSelect }: TranslationViewProps) {
+function TranslationView({
+  documentId,
+  highlightedSentenceId: externalHighlightedId,
+  onSentenceHover,
+  onTextSelect
+}: TranslationViewProps) {
   const [translation, setTranslation] = useState<Translation | null>(null);
-  const [paragraphs, setParagraphs] = useState<TranslationParagraph[]>([]);
+  const [sentences, setSentences] = useState<TranslationSentence[]>([]);
   const [loading, setLoading] = useState(false);
   const [translating, setTranslating] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState<string | null>(null);
+  const [internalHighlightedId, setInternalHighlightedId] = useState<number | null>(null);
+
+  // 使用外部传入的高亮ID，如果没有则使用内部状态
+  const highlightedSentenceId = externalHighlightedId !== undefined ? externalHighlightedId : internalHighlightedId;
 
   // 翻译配置
   const [targetLang, setTargetLang] = useState<string>('zh');
   const [translateStyle, setTranslateStyle] = useState<string>('fluent');
+
+  // 引用
+  const originalTextRef = useRef<HTMLDivElement>(null);
+  const translatedTextRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * 将段落拆分成句子
+   */
+  const splitIntoSentences = (paragraphs: TranslationParagraph[]): TranslationSentence[] => {
+    const sentenceArray: TranslationSentence[] = [];
+    let sentenceId = 0;
+
+    // 句子分隔符正则（中英文句号、问号、感叹号）
+    const sentenceDelimiterRegex = /([.!?。!?]+[\s]*)/g;
+
+    paragraphs.forEach((paragraph) => {
+      // 分割原文句子
+      const originalSentences = paragraph.original.split(sentenceDelimiterRegex).filter(s => s.trim());
+      const translatedSentences = paragraph.translated.split(sentenceDelimiterRegex).filter(s => s.trim());
+
+      // 合并标点符号和句子
+      const mergedOriginal: string[] = [];
+      const mergedTranslated: string[] = [];
+
+      for (let i = 0; i < originalSentences.length; i++) {
+        if (sentenceDelimiterRegex.test(originalSentences[i])) {
+          // 如果是标点符号，合并到上一个句子
+          if (mergedOriginal.length > 0) {
+            mergedOriginal[mergedOriginal.length - 1] += originalSentences[i];
+          }
+        } else {
+          mergedOriginal.push(originalSentences[i]);
+        }
+      }
+
+      for (let i = 0; i < translatedSentences.length; i++) {
+        if (sentenceDelimiterRegex.test(translatedSentences[i])) {
+          if (mergedTranslated.length > 0) {
+            mergedTranslated[mergedTranslated.length - 1] += translatedSentences[i];
+          }
+        } else {
+          mergedTranslated.push(translatedSentences[i]);
+        }
+      }
+
+      // 对齐句子数量（取最小值）
+      const minLength = Math.min(mergedOriginal.length, mergedTranslated.length);
+
+      for (let i = 0; i < minLength; i++) {
+        sentenceArray.push({
+          id: sentenceId++,
+          originalText: mergedOriginal[i].trim(),
+          translatedText: mergedTranslated[i].trim(),
+          startIndex: 0, // TODO: 计算实际位置
+          endIndex: 0,
+        });
+      }
+    });
+
+    return sentenceArray;
+  };
 
   /**
    * 加载最新翻译
@@ -49,12 +131,15 @@ function TranslationView({ documentId, onParagraphSelect }: TranslationViewProps
         const parsedParagraphs: TranslationParagraph[] = JSON.parse(
           result.translatedContent
         );
-        setParagraphs(parsedParagraphs);
+
+        // 拆分成句子
+        const sentenceArray = splitIntoSentences(parsedParagraphs);
+        setSentences(sentenceArray);
       }
     } catch (error: any) {
       console.log('[翻译查看器]-暂无翻译记录');
       setTranslation(null);
-      setParagraphs([]);
+      setSentences([]);
     } finally {
       setLoading(false);
     }
@@ -108,7 +193,10 @@ function TranslationView({ documentId, onParagraphSelect }: TranslationViewProps
             const parsedParagraphs: TranslationParagraph[] = JSON.parse(
               result.translatedContent
             );
-            setParagraphs(parsedParagraphs);
+
+            // 拆分成句子
+            const sentenceArray = splitIntoSentences(parsedParagraphs);
+            setSentences(sentenceArray);
           }
         } else if (result.status === 2) {
           // 翻译失败
@@ -142,13 +230,49 @@ function TranslationView({ documentId, onParagraphSelect }: TranslationViewProps
   };
 
   /**
-   * 处理段落点击
+   * 处理句子鼠标悬停
    */
-  const handleParagraphClick = (paragraph: TranslationParagraph) => {
-    setSelectedIndex(paragraph.index);
-    if (onParagraphSelect) {
-      onParagraphSelect(paragraph);
+  const handleSentenceHover = (sentenceId: number | null) => {
+    if (onSentenceHover) {
+      // 如果有外部回调，调用外部回调（联动高亮）
+      onSentenceHover(sentenceId);
+    } else {
+      // 否则使用内部状态
+      setInternalHighlightedId(sentenceId);
     }
+  };
+
+  /**
+   * 处理文本选择
+   */
+  const handleTextSelection = () => {
+    if (onTextSelect) {
+      const selection = window.getSelection();
+      const text = selection?.toString().trim();
+      if (text) {
+        onTextSelect(text);
+      }
+    }
+  };
+
+  /**
+   * 渲染译文内容（单栏模式）
+   */
+  const renderTranslatedText = () => {
+    return (
+      <div className="translation-text-content">
+        {sentences.map((sentence) => (
+          <span
+            key={sentence.id}
+            className={`translation-sentence ${highlightedSentenceId === sentence.id ? 'highlighted' : ''}`}
+            onMouseEnter={() => handleSentenceHover(sentence.id)}
+            onMouseLeave={() => handleSentenceHover(null)}
+          >
+            {sentence.translatedText}{' '}
+          </span>
+        ))}
+      </div>
+    );
   };
 
   /**
@@ -201,28 +325,17 @@ function TranslationView({ documentId, onParagraphSelect }: TranslationViewProps
         )}
       </div>
 
-      {/* 翻译内容区域 */}
+      {/* 翻译内容区域 - 单栏译文显示 */}
       <div className="translation-content">
         {loading ? (
           <div className="translation-loading">
             <Spin tip="加载翻译中..." />
           </div>
-        ) : paragraphs.length > 0 ? (
-          <div className="paragraphs-container">
-            {paragraphs.map((paragraph) => (
-              <div
-                key={paragraph.index}
-                className={`paragraph-item ${
-                  selectedIndex === paragraph.index ? 'selected' : ''
-                }`}
-                onClick={() => handleParagraphClick(paragraph)}
-              >
-                <div className="paragraph-index">段落 {parseInt(paragraph.index) + 1}</div>
-                <div className="paragraph-original">{paragraph.original}</div>
-                <div className="paragraph-divider"></div>
-                <div className="paragraph-translated">{paragraph.translated}</div>
-              </div>
-            ))}
+        ) : sentences.length > 0 ? (
+          <div className="single-column-view">
+            <div className="translation-text-panel" onMouseUp={handleTextSelection}>
+              {renderTranslatedText()}
+            </div>
           </div>
         ) : (
           <div className="translation-empty">
